@@ -1,3 +1,7 @@
+# Bandaid fix for weird bugs on my PC: every time certain programs would open they would change
+# my mouse speed. This just sets a default mouse speed and makes sure that it stays at that 
+# speed. 
+
 import ctypes
 import time #Done for speed reasons I suppose lol
 
@@ -13,18 +17,12 @@ def get_current_speed():
     get_mouse_speed = 112   # 0x0070 for SPI_GETMOUSESPEED
     speed = ctypes.c_int()
     ctypes.windll.user32.SystemParametersInfoA(get_mouse_speed, 0, ctypes.byref(speed), 0)
-
     return speed.value
-
-
-def proper_close():
-    change_speed(standard_speed)
-    root.destroy()
 
 standard_speed = get_current_speed()
 
-
 while True:
-    print('Updating Mouse Speed!')
-    change_speed(standard_speed)
-    time.sleep(10)
+    if get_current_speed() != standard_speed:
+        print('Updating Mouse Speed!')
+        change_speed(standard_speed)
+        time.sleep(1)
